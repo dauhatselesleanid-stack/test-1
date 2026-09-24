@@ -50,7 +50,8 @@ int main() {
         int x;
         cin >> x;
 
-        int l = LowerBound(a, x);
+
+        int l = LowerBound(a,x);
         int r = UpperBound(a, x);
         
         int b = (l < n && a[l] == x) ? 1 : 0;
