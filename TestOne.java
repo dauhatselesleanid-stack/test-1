@@ -63,7 +63,9 @@ public class TestOne {
 
         System.out.print("Введите k (натуральное число): ");
         int k = scanner.nextInt();
-
+        
+        scanner.close();
+        
         if (x <= -1 || x > 1 || k <= 0) {
             System.out.println("Ошибка: не соблюдено условие (-1 < x <= 1) или k <= 0!");
             return;
@@ -77,5 +79,8 @@ public class TestOne {
         System.out.printf("Math.log(1 + x):        %+." + (k + 1) + "f%n", answer_Math);
         System.out.printf("Сумма ряда (double):    %+." + (k + 1) + "f%n", answer);
         System.out.printf("Сумма ряда (BigDecimal):+%s%n", answer_BigDecimal);
+
+        
+        Read.close();
     }
 }
