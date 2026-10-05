@@ -1,50 +1,47 @@
 #include <iostream>
 #include <fstream>
-#include <iomanip>   
-#include <cstdlib>   
-#include "employee.h"
+#include <string>
+#include <cstring>
+
+using namespace std;
+
+struct employee {
+    int num;
+    char name[10];
+    double hours;
+};
 
 int main(int argc, char* argv[]) {
-    if (argc != 3) {
-        std::cerr << "Использование: ./creator <имя_файла> <кол-во_записей>\n";
+    if (argc < 3) {
+        cerr << "Usage: ./creator <binary_file_name> <number_of_records>\n";
         return 1;
     }
 
-    const char* filename = argv[1];
-    int count = std::atoi(argv[2]);
+    string fileName = argv[1];
+    int recordCount = stoi(argv[2]);
 
-    if (count <= 0) {
-        std::cerr << "Ошибка: количество записей должно быть > 0\n";
+    ofstream outFile(fileName, ios::binary);
+    if (!outFile.is_open()) {
+        cerr << "Error: Cannot create binary file.\n";
         return 1;
     }
 
-    std::ofstream file(filename, std::ios::binary);
-    if (!file.is_open()) {
-        std::cerr << "Ошибка: не удалось создать файл '" << filename << "'\n";
-        return 1;
+    for (int i = 0; i < recordCount; ++i) {
+        employee emp;
+        cout << "Enter data for employee #" << i + 1 << ":\n";
+        cout << "ID (num): ";
+        cin >> emp.num;
+        cout << "Name (max 9 chars): ";
+        string tempName;
+        cin >> tempName;
+        strncpy(emp.name, tempName.c_str(), 9);
+        emp.name[9] = '\0';
+        cout << "Hours: ";
+        cin >> emp.hours;
+
+        outFile.write(reinterpret_cast<char*>(&emp), sizeof(employee));
     }
 
-    std::cout << "Введите " << count << " запись(ей) сотрудников:\n";
-
-    for (int i = 0; i < count; ++i) {
-        employee emp{};   
-
-        std::cout << "\nЗапись " << (i + 1) << ":\n";
-
-        std::cout << "  Номер (ID): ";
-        std::cin >> emp.num;
-
-        std::cout << "  Имя (до 9 символов): ";
-        std::cin >> std::setw(10) >> emp.name;  
-
-        std::cout << "  Часы: ";
-        std::cin >> emp.hours;
-
-        file.write(reinterpret_cast<const char*>(&emp), sizeof(employee));
-    }
-
-    file.close();
-    std::cout << "\nФайл '" << filename << "' успешно создан ("
-              << count << " запись(ей)).\n";
+    outFile.close();
     return 0;
 }

@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Lab 1: запуск Main (outDebug)",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/Os-Laba-1/outDebug",
+      "args": [],
+      "cwd": "${workspaceFolder}/Os-Laba-1",
+      "terminal": "integrated",
+      "preLaunchTask": "build all (lab 1)"
+    },
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/nghtgs/newmamka/test-1/Os-Laba-1/Another-idea",
+      "program": "/Users/nghtgs/newmamka/test-1/Os-Laba-1/Another-idea/build/Debug/outDebug"
+    }
+  ]
+}

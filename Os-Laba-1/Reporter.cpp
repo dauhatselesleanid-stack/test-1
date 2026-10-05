@@ -1,68 +1,62 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <algorithm>  
-#include <iomanip>    
-#include <cstdlib>    
-#include "employee.h"
+#include <string>
+#include <algorithm>
+#include <iomanip>
+
+using namespace std;
+
+struct employee {
+    int num;
+    char name[10];
+    double hours;
+};
+
+bool compareEmployees(const employee& a, const employee& b) {
+    return a.num < b.num;
+}
 
 int main(int argc, char* argv[]) {
-    if (argc != 4) {
-        std::cerr << "Использование: ./reporter <бин_файл> <файл_отчёта> <оплата_за_час>\n";
+    if (argc < 4) {
+        cerr << "Usage: ./reporter <binary_file> <report_file> <hourly_rate>\n";
         return 1;
     }
 
-    const char* binFile = argv[1];
-    const char* repFile = argv[2];
-    double rate         = std::atof(argv[3]);  
+    string binFileName = argv[1];
+    string reportFileName = argv[2];
+    double hourlyRate = stod(argv[3]);
 
-    std::ifstream bin(binFile, std::ios::binary);
-    if (!bin.is_open()) {
-        std::cerr << "Ошибка: не удалось открыть файл '" << binFile << "'\n";
+    ifstream inFile(binFileName, ios::binary);
+    if (!inFile.is_open()) {
+        cerr << "Error: Cannot open binary file.\n";
         return 1;
     }
 
-    std::vector<employee> employees;
+    vector<employee> employees;
     employee emp;
-    while (bin.read(reinterpret_cast<char*>(&emp), sizeof(employee))) {
+    while (inFile.read(reinterpret_cast<char*>(&emp), sizeof(employee))) {
         employees.push_back(emp);
     }
-    bin.close();
+    inFile.close();
 
-    std::sort(employees.begin(), employees.end(),
-              [](const employee& a, const employee& b) {
-                  return a.num < b.num;
-              });
+    sort(employees.begin(), employees.end(), compareEmployees);
 
-    std::ofstream rep(repFile);
-    if (!rep.is_open()) {
-        std::cerr << "Ошибка: не удалось создать файл отчёта '" << repFile << "'\n";
+    ofstream reportFile(reportFileName);
+    if (!reportFile.is_open()) {
+        cerr << "Error: Cannot create report file.\n";
         return 1;
     }
 
-    const int W1 = 10, W2 = 14, W3 = 10, W4 = 12;
-    const std::string sep(W1 + W2 + W3 + W4, '-');
+    reportFile << "Отчет по файлу \"" << binFileName << "\"\n";
+    reportFile << "Номер сотрудника, имя сотрудника, часы, зарплата.\n";
 
-    rep << "Отчет по файлу \"" << binFile << "\"\n";
-    rep << sep << "\n";
-
-    rep << std::left
-        << std::setw(W1 + 5)  << "Номер"
-        << std::setw(W2 + 3)  << "Имя"
-        << std::setw(W3 + 4)  << "Часы"
-        << "Зарплата" << "\n";
-    rep << sep << "\n";
-
+    reportFile << fixed << setprecision(2);
     for (const auto& e : employees) {
-        double salary = e.hours * rate;
-        rep << std::left
-            << std::setw(W1) << e.num
-            << std::setw(W2) << e.name
-            << std::setw(W3) << std::fixed << std::setprecision(1) << e.hours
-            << std::fixed << std::setprecision(2) << salary << "\n";
+        double salary = e.hours * hourlyRate;
+        reportFile << e.num << " " << e.name << " " << e.hours << " " << salary << "\n";
     }
 
-    rep.close();
-    std::cout << "Файл отчёта '" << repFile << "' успешно создан.\n";
+    reportFile.close();
     return 0;
 }

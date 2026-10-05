@@ -1,0 +1,72 @@
+{
+  "version": "2.0.0",
+  "options": {
+    "cwd": "${workspaceFolder}/Os-Laba-1"
+  },
+  "tasks": [
+    {
+      "label": "build: creator",
+      "type": "shell",
+      "command": "clang++",
+      "args": [
+        "-std=c++17",
+        "-g",
+        "-Wall",
+        "-o",
+        "creator",
+        "Creator.cpp"
+      ],
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "build: reporter",
+      "type": "shell",
+      "command": "clang++",
+      "args": [
+        "-std=c++17",
+        "-g",
+        "-Wall",
+        "-o",
+        "reporter",
+        "Reporter.cpp"
+      ],
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "build: outDebug",
+      "type": "shell",
+      "command": "clang++",
+      "args": [
+        "-std=c++17",
+        "-g",
+        "-Wall",
+        "-o",
+        "outDebug",
+        "Main.cpp"
+      ],
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "build all (lab 1)",
+      "dependsOrder": "sequence",
+      "dependsOn": ["build: creator", "build: reporter", "build: outDebug"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "run lab 1 in terminal",
+      "type": "shell",
+      "command": "./outDebug",
+      "dependsOn": ["build all (lab 1)"],
+      "dependsOrder": "sequence",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    }
+  ]
+}
